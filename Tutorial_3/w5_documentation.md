@@ -71,6 +71,8 @@ Input (name, quantities) -> Calculate total -> Print receipt
 - Prices are fixed: Coffee RM 8.50, Tea RM 6.00, Sandwich RM 12.00.
 - Quantities must be **whole numbers** (you can't buy 1.5 coffees).
 - Quantities can't be **negative**. Zero is allowed, for items the customer didn't order.
+- The order must contain **at least one item** (0 coffee, 0 tea and 0 sandwich is rejected).
+- The customer name **can't be empty**.
 - Money is shown with **2 decimal places** (RM 67.50, not RM 67.5).
 - Only the three menu items can be ordered.
 - The logic functions must be in `utils.py`, and the program must run from `main.py`.
@@ -86,7 +88,7 @@ The big problem, "calculate a customer's bill", breaks into small tasks, each wi
 | **Get input** | Reads the name and the three quantities, rejecting bad values | `get_quantity()` in `utils.py`, called from `main.py` |
 | **Calculate** | Works out `quantity × price` for each item and adds them up | `calculate_total()` in `utils.py` |
 | **Display** | Prints the receipt in the required format | `print_receipt()` in `utils.py` |
-| **Control the flow** | Calls the tasks above in order: input, then calculate, then print | `main()` in `main.py` |
+| **Control the flow** | Calls the tasks above in order: input, then calculate, then print. Also rejects an empty name or an empty order | `main()` in `main.py` |
 
 Splitting it up this way means each piece can be tested and fixed on its own. For example, if a price changes, only the constant at the top of `utils.py` needs updating.
 
@@ -116,10 +118,11 @@ FUNCTION print_receipt(name, coffee, tea, sandwich, total)
 END FUNCTION
 
 MAIN
-    INPUT name
+    INPUT name        // repeat until it is not empty
     INPUT coffee      // repeat until it is a whole number >= 0
     INPUT tea         // repeat until it is a whole number >= 0
     INPUT sandwich    // repeat until it is a whole number >= 0
+    // if coffee + tea + sandwich = 0, the order is empty: ask for the quantities again
 
     total = calculate_total(coffee, tea, sandwich)
     print_receipt(name, coffee, tea, sandwich, total)
@@ -187,3 +190,13 @@ Coffee quantity: 1
 ```
 
 The program doesn't crash on bad input. It asks again until it gets a valid quantity.
+
+### Test Run (empty order)
+
+```
+Coffee quantity: 0
+Tea quantity: 0
+Sandwich quantity: 0
+The order is empty. Please order at least one item.
+Coffee quantity: 1
+```

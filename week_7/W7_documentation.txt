@@ -59,6 +59,8 @@ Test results:
     -10, 2                    Total Payment = RM -20.00          reject the order
     10, 0                     Total Payment = RM 0.00            reject the order
     10, -3                    Total Payment = RM -30.00          reject the order
+    nan, 2                    Total Payment = RM nan             reject the order
+    inf, 2                    Total Payment = RM inf             reject the order
 
 Bugs found:
 
@@ -73,6 +75,8 @@ Bugs found:
           quantity of 0 or less, still produces a "Total Payment", even a
           negative one (RM -20.00). This is the "accepts invalid orders"
           complaint.
+          Python's float() also accepts the text "nan" and "inf", which
+          produced "Total Payment = RM nan" and "RM inf".
 
   BUG 3 - main.py does the calculation itself instead of using food_order.py.
           The template has "from ___ import ___", but main() works out
@@ -99,14 +103,17 @@ Bugs found:
 
 food_order.py - validation added to calculate_total():
 
+    import math
+
     def calculate_total(price, quantity):
-        if price <= 0:
+        if not math.isfinite(price) or price <= 0:
             return "invalid price"
         if quantity <= 0:
             return "invalid quantity"
         return price * quantity
 
-    - Price must be greater than 0      -> otherwise "invalid price"
+    - Price must be a finite number greater than 0 -> otherwise "invalid price"
+      (math.isfinite() rejects nan and inf)
     - Quantity must be greater than 0   -> otherwise "invalid quantity"
     - Otherwise returns price x quantity
 
@@ -153,6 +160,8 @@ test_food_order.py has one test for each case in the template:
     test_order4              10, 1        10
     test_invalid_price       -5, 2        "invalid price"
                              0, 2         "invalid price"
+                             nan, 2       "invalid price"
+                             inf, 2       "invalid price"
     test_invalid_quantity    10, 0        "invalid quantity"
                              10, -3       "invalid quantity"
 

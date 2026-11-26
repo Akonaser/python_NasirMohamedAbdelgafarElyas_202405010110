@@ -101,11 +101,11 @@ def read_age():
     while True:
         try:
             age = int(input("Enter age: "))
-            if age >= 0:
+            if 0 <= age <= 120:
                 return age
         except ValueError:
             pass
-        print("Please enter a whole number of 0 or more.")
+        print("Please enter a whole number from 0 to 120.")
 
 
 def read_yes_no(prompt):

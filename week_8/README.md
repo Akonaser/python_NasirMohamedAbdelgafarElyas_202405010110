@@ -17,7 +17,7 @@ It:
 1. Collects the customer's order: name, food (Cake or Muffin), quantity, price per item, and whether they want delivery.
 2. Calculates the bill:
    - **Subtotal** = quantity × price
-   - **Service charge** = 5% of the subtotal
+   - **Service charge** = 5% of the subtotal, rounded to the nearest sen so the receipt always adds up
    - **Delivery charge** = RM 5.00 if delivery is chosen, otherwise RM 0.00
    - **Total** = subtotal + service charge + delivery charge
 3. Prints a formatted receipt.
@@ -69,10 +69,10 @@ The program asks for each value in turn:
 
 | Prompt | What to enter | Rules |
 |---|---|---|
-| Customer Name | Any name | – |
+| Customer Name | Any name | Can't be empty |
 | Food Ordered (Cake/Muffin) | `Cake` or `Muffin` | Not case-sensitive. Anything else is asked again |
 | Quantity | A whole number | Must be more than 0 |
-| Price per Item (RM) | A number, e.g. `3.00` | Must be more than 0 |
+| Price per Item (RM) | A number, e.g. `3.00` | Must be more than 0 (`inf` and `nan` are rejected) |
 | Delivery (Y/N) | `Y` or `N` | `Y` adds RM 5.00 delivery |
 
 If an entry is invalid, the program explains why and asks again instead of crashing.

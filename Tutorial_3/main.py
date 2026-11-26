@@ -11,9 +11,17 @@ from utils import get_quantity, calculate_total, print_receipt
 def main():
     # 1. Input: customer name and how many of each item they ordered
     name = input("Customer name: ").strip()
-    coffee = get_quantity("Coffee quantity: ")
-    tea = get_quantity("Tea quantity: ")
-    sandwich = get_quantity("Sandwich quantity: ")
+    while name == "":
+        print("Name cannot be empty.")
+        name = input("Customer name: ").strip()
+    while True:
+        coffee = get_quantity("Coffee quantity: ")
+        tea = get_quantity("Tea quantity: ")
+        sandwich = get_quantity("Sandwich quantity: ")
+        # an order must contain at least one item
+        if coffee + tea + sandwich > 0:
+            break
+        print("The order is empty. Please order at least one item.")
 
     # 2. Process: work out the bill using the logic in utils.py
     total = calculate_total(coffee, tea, sandwich)

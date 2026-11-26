@@ -10,7 +10,9 @@ SERVICE_RATE = 0.05  # 5% service charge
 def print_receipt(name, food, quantity, price, delivery_charges):
 
     subtotal = quantity * price
-    service_charge = subtotal * SERVICE_RATE
+    # Round to sen (2 d.p.) before adding, so the printed lines always add up
+    # to the printed total (e.g. RM 0.30 + RM 0.01 = RM 0.31, not RM 0.32)
+    service_charge = round(subtotal * SERVICE_RATE, 2)
     grand_total = subtotal + service_charge + delivery_charges
 
     print("\n========== RECEIPT ==========")

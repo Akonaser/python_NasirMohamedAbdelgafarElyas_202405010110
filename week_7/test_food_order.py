@@ -33,6 +33,8 @@ def test_order4():
 def test_invalid_price():
     assert food_order(-5, 2) == "invalid price"
     assert food_order(0, 2) == "invalid price"
+    assert food_order(float("nan"), 2) == "invalid price"
+    assert food_order(float("inf"), 2) == "invalid price"
 
 
 # test if total food order is equal to "invalid quantity"

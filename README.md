@@ -8,3 +8,5 @@ tutorials
 | [Tutorial 3](Tutorial_3/w5_documentation.md) | Cafe bill calculator: functions in utils.py, run from main.py |
 | [Tutorial 4 (Week 7)](week_7/W7_documentation.txt) | FoodExpress: debugging, input validation, pytest |
 | [Tutorial 5 (Week 8)](week_8/README.md) | Food delivery receipt generator: modules, imports, README |
+
+See [TEST_REPORT.md](TEST_REPORT.md) for the test results and bug fixes across all tutorials.

@@ -4,6 +4,8 @@
 # Name: Nasir Mohamed Abdelgafar Elyas
 # Student ID: 202405010110
 
+import math
+
 DELIVERY_FEE = 5.00
 MENU = ("Cake", "Muffin")
 
@@ -14,6 +16,9 @@ def get_customer():
 
     # Input: customer name and order details (each one checked before moving on)
     name = input("Customer Name : ").strip()
+    while name == "":
+        print("Name cannot be empty.")
+        name = input("Customer Name : ").strip()
 
     food = input("Food Ordered (Cake/Muffin) : ").strip().capitalize()
     while food not in MENU:
@@ -43,7 +48,8 @@ def read_positive(prompt, convert):
     while True:
         try:
             value = convert(input(prompt))
-            if value > 0:
+            # isfinite() rejects "inf" and "nan", which float() would otherwise accept
+            if math.isfinite(value) and value > 0:
                 return value
             print("Value must be greater than 0.")
         except ValueError:
