@@ -1,0 +1,174 @@
+WEEK 7 - TUTORIAL 7: FoodExpress Ordering System
+=================================================
+Name       : Nasir Mohamed Abdelgafar Elyas
+Student ID : 202405010110
+
+
+SCENARIO
+--------
+FoodExpress is a food delivery startup. Customers have complained that the
+ordering system sometimes CRASHES or ACCEPTS INVALID ORDERS. My job is to
+identify the bugs, fix the program, validate customer input and test the
+system using pytest.
+
+
+FILES
+-----
+main.py              - runs the program (asks for price and quantity)
+food_order.py        - the logic: calculate_total(price, quantity)
+test_food_order.py   - pytest tests for calculate_total
+W7_documentation.txt - this file
+
+
+===============================================================================
+1. COMPLETING THE TEMPLATE
+===============================================================================
+
+main.py
+    from food_order import calculate_total
+    ...
+    total = calculate_total(price, quantity)
+
+food_order.py
+    def calculate_total(price, quantity):
+        # check price and quantity are valid (the "missing code")
+        return price * quantity
+
+
+===============================================================================
+2. TESTING THE PROGRAM & IDENTIFYING THE BUGS IN main.py
+===============================================================================
+
+I ran the original template version of main.py with different inputs.
+
+Original main.py (template):
+
+    def main():
+        price = float(input("Price (RM): "))
+        quantity = int(input("Quantity: "))
+        total = price * quantity
+        print(f"Total Payment = RM {total:.2f}")
+
+Test results:
+
+    Input (price, quantity)   What happened                      Expected
+    -----------------------   --------------------------------   -----------------
+    10, 2                     Total Payment = RM 20.00           OK
+    abc, 2                    CRASH: ValueError                  ask again
+    10, 2.5                   CRASH: ValueError (int("2.5"))     ask again
+    -10, 2                    Total Payment = RM -20.00          reject the order
+    10, 0                     Total Payment = RM 0.00            reject the order
+    10, -3                    Total Payment = RM -30.00          reject the order
+
+Bugs found:
+
+  BUG 1 - The program CRASHES on non-numeric input.
+          float(input(...)) and int(input(...)) raise a ValueError when the
+          user types something that isn't a number (e.g. "abc", or "2.5" for
+          the quantity). Nothing catches the error, so the whole program
+          stops. This is the "system sometimes crashes" complaint.
+
+  BUG 2 - The program ACCEPTS INVALID ORDERS.
+          There is no check on the values. A price of 0 or less, or a
+          quantity of 0 or less, still produces a "Total Payment", even a
+          negative one (RM -20.00). This is the "accepts invalid orders"
+          complaint.
+
+  BUG 3 - main.py does the calculation itself instead of using food_order.py.
+          The template has "from ___ import ___", but main() works out
+          price * quantity directly. Any validation written in
+          calculate_total() would never run. The logic belongs in one place.
+
+  BUG 4 - Syntax error in the print statement.
+          The template line ends with a curly quote:
+              print(f"Total Payment = RM {total:.2f}”)
+          Python only accepts straight quotes ("), so the f-string is never
+          closed and the file won't run at all. Fixed by using a straight
+          quote: print(f"Total Payment = RM {total:.2f}")
+
+  BUG 5 - test_food_order.py calls a function that doesn't exist.
+          The test calls food_order(10, 2), but the function in
+          food_order.py is named calculate_total. Running pytest gives a
+          NameError. Fixed by importing it under the test's name:
+              from food_order import calculate_total as food_order
+
+
+===============================================================================
+3. DEBUGGING: THE FIXES
+===============================================================================
+
+food_order.py - validation added to calculate_total():
+
+    def calculate_total(price, quantity):
+        if price <= 0:
+            return "invalid price"
+        if quantity <= 0:
+            return "invalid quantity"
+        return price * quantity
+
+    - Price must be greater than 0      -> otherwise "invalid price"
+    - Quantity must be greater than 0   -> otherwise "invalid quantity"
+    - Otherwise returns price x quantity
+
+main.py - fixed version:
+
+    - Imports and uses calculate_total() from food_order.py (fixes Bug 3)
+    - read_number() wraps float()/int() in try/except ValueError and asks
+      again until the input is a number, so it no longer crashes (Bug 1)
+    - If calculate_total() returns "invalid price" or "invalid quantity",
+      the order is rejected and the user is asked again (Bug 2)
+    - The print uses straight quotes (Bug 4)
+
+Fixed main.py test run:
+
+    Price (RM): abc
+    Please enter a valid number.
+    Price (RM): 12.5
+    Quantity: 0
+    Order rejected: invalid quantity. Please try again.
+
+    Price (RM): 12.5
+    Quantity: 3
+    Total Payment = RM 37.50
+
+
+===============================================================================
+4. INSTALLING PYTEST
+===============================================================================
+
+    pip install pytest
+
+
+===============================================================================
+5. TESTING WITH PYTEST
+===============================================================================
+
+test_food_order.py has one test for each case in the template:
+
+    Test                     Input        Expected
+    ---------------------    ---------    -------------------
+    test_order1              10, 2        20
+    test_order2              15, 2        30
+    test_order3              25, 4        100
+    test_order4              10, 1        10
+    test_invalid_price       -5, 2        "invalid price"
+                             0, 2         "invalid price"
+    test_invalid_quantity    10, 0        "invalid quantity"
+                             10, -3       "invalid quantity"
+
+Run from inside the week_7 folder:
+
+    pytest
+
+Output:
+
+    ============================= test session starts ==============================
+    platform linux -- Python 3.13.18, pytest-9.1.1, pluggy-1.6.0
+    collected 6 items
+
+    test_food_order.py ......                                                [100%]
+
+    ============================== 6 passed in 0.02s ===============================
+
+All 6 tests pass. (The tutorial's sample output shows 4 items; this version
+has 6 because there is one test for each case listed in the template.)
