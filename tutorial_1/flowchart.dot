@@ -1,0 +1,27 @@
+digraph Admission {
+    graph [rankdir=TB, fontname="Helvetica", bgcolor="white", pad="0.4", nodesep="0.6", ranksep="0.5",
+           label="Movie Theater Admission Flowchart", labelloc="t", fontsize=20];
+    node  [fontname="Helvetica", fontsize=13, style="filled", color="#1f3b57", penwidth=1.6];
+    edge  [fontname="Helvetica", fontsize=12, color="#1f3b57", penwidth=1.4];
+
+    start   [label="Start", shape=oval, fillcolor="#cfe8d5"];
+    input   [label="Input:\nage, accompanied (Y/N),\nhas_ticket (Y/N)", shape=parallelogram, fillcolor="#e3eefa"];
+    ticket  [label="has_ticket\n== True?", shape=diamond, fillcolor="#fff2cc"];
+    age     [label="age >= 13?", shape=diamond, fillcolor="#fff2cc"];
+    adult   [label="accompanied\n== True?", shape=diamond, fillcolor="#fff2cc"];
+    allow   [label="Output:\n\"Entry Allowed\"", shape=parallelogram, fillcolor="#cfe8d5"];
+    deny    [label="Output:\n\"Entry Denied\"", shape=parallelogram, fillcolor="#f8d0d0"];
+    stop    [label="End", shape=oval, fillcolor="#cfe8d5"];
+
+    start -> input -> ticket;
+    ticket -> age   [label="Yes"];
+    ticket -> deny  [label="No"];
+    age    -> allow [label="Yes"];
+    age    -> adult [label="No"];
+    adult  -> allow [label="Yes"];
+    adult  -> deny  [label="No"];
+    allow  -> stop;
+    deny   -> stop;
+
+    { rank=same; allow; deny; }
+}
